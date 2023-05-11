@@ -3,12 +3,12 @@ services:
 
   www:
     build: .
-    image: testdocker_demo
-    container_name: testdocker_demo
+    image: testdocker_dev
+    container_name: testdocker_dev
     ports:
-      - "10028:80"
+      - "10038:80"
     volumes:
       - ./php/vhosts:/etc/apache2/sites-enabled
-      - ./:/var/www/testdocker_demo
+      - ./:/var/www/testdocker_dev
     restart: on-failure
     network_mode: bridge

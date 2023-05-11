@@ -1,7 +1,7 @@
 controllers:
   resource: ../src/Controller/
   type: annotation
-  prefix: /test_demo
+  prefix: /test_dev
 
 kernel:
   resource: ../src/Kernel.php

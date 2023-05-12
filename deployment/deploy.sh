@@ -15,7 +15,7 @@ if [ "$installed" = true ]; then
   # Drop old DB application User
   echo ""
   echo "Suppression de l'utilisateur de l'application des utilisateurs de la base de données"
-  mysql -u root -proot $dbName -e "DROP USER '$applicationUsername'@'172.17.0.%';";
+  mysql -u root -proot $dbName -e "DROP USER '$applicationUsername'@'%';";
 #  echo "db.dropUser(\"$applicationUsername\")" | mongosh -u sadmin -p sadmin admin TODO: MySQL
 
   # Try to find a Docker image by name (server config)
@@ -113,8 +113,8 @@ cd ..
 # Create the dedicated user for this MySQL Database # TODO: MySQL
 echo ""
 echo "Ajout de l'utilisateur de l'application dans les utilisateurs de la base de données"
-mysql -u root -proot -e "CREATE USER '$applicationUsername'@'172.17.0.%' IDENTIFIED BY '$applicationUserPwd';"
-mysql -u root -proot -e "GRANT SELECT, UPDATE, INSERT, DELETE, CREATE, DROP, ALTER, REFERENCES ON $dbName.* TO '$applicationUsername'@'172.17.0.%';"
+mysql -u root -proot -e "CREATE USER '$applicationUsername'@'%' IDENTIFIED BY '$applicationUserPwd';"
+mysql -u root -proot -e "GRANT SELECT, UPDATE, INSERT, DELETE, CREATE, DROP, ALTER, REFERENCES ON $dbName.* TO '$applicationUsername'@'%';"
 #echo "db.createUser({user: \"$applicationUsername\", pwd: \"$applicationUserPwd\", roles: [{role: \"readWrite\", db: \"$dbName\"}]})" | mongosh -u sadmin -p sadmin admin || echo "L'utilisateur de cette base de données existe déjà"
 echo ""
 echo ""

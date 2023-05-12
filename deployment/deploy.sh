@@ -95,8 +95,8 @@ sed -i "s/^.*<Directory.*bundles.*$/    <Directory \/var\/www\/$dockerImageName\
 ##### COMMAND NEEDED TO SETUP THE PROJECT #####
 cd $gitRepo
 npm install
-composer install -y
-exec npm run watch -d # TODO: Run async
+npm run build &
+composer install -n
 cd ..
 
 echo "Next"

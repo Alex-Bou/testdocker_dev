@@ -115,6 +115,7 @@ echo "$ERR_DB_GRANT"
 echo ""
 echo "Utilisateur de base de données ajouté et configuré !"
 
+read
 ##### COMMAND NEEDED TO SETUP THE PROJECT #####
 cd $gitRepo
 echo ""

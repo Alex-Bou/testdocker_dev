@@ -75,8 +75,8 @@ sed -i "s/^.*APP_ENV=.*$/APP_ENV=prod/" "$gitRepo"/.env
 sed -i "s/^.*APP_DEBUG=.*$/APP_DEBUG=false/" "$gitRepo"/.env
 sed -i "s/^.*SECURE_SCHEME=.*$/SECURE_SCHEME=http/" "$gitRepo"/.env
 sed -i "s/^.*APP_SECRET=.*$/APP_SECRET=$jwtSecret/" "$gitRepo"/.env
-sed -i "s/^.*DATABASE_URL=.*$/DATABASE_URL=\"mysql://$username:$password@$db_ip:$db_port/$db_name\"/" "$gitRepo"/.env
-sed -i "s/^.*BASE_URL=.*$/BASE_URL=http://$serverIp:$serverPort/$applicationDir/" "$gitRepo"/.env
+sed -i "s/^.*DATABASE_URL=.*$/DATABASE_URL=\"mysql:\/\/$username:$password@$db_ip:$db_port\/$db_name\"/" "$gitRepo"/.env
+sed -i "s/^.*BASE_URL=.*$/BASE_URL=http:\/\/$serverIp:$serverPort\/$applicationDir\/" "$gitRepo"/.env
 sed -i "s/^.*URL_ROOT=.*$/URL_ROOT=$applicationDir/" "$gitRepo"/.env
 # docker-compose.yaml
 sed -i "s/^.*image:.*$/    image: $dockerImageName/" "$gitRepo"/docker-compose.yaml
@@ -93,16 +93,18 @@ sed -i "s/^.*<Directory.*bundles.*$/    <Directory \/var\/www\/$dockerImageName\
 
 
 ##### COMMAND NEEDED TO SETUP THE PROJECT #####
- npm install
- npm run watch & # TODO: Run async
- composer install
+cd $gitRepo
+npm install -n
+npm run watch & # TODO: Run async
+composer install
+cd ..
 
 ##### MYSQL DEDICATED DB USER CREATION #####
 # Create the dedicated user for this MySQL Database # TODO: MySQL
 echo ""
 echo "Ajout de l'utilisateur de l'application dans les utilisateurs de la base de données"
-mysql -u root -proot $dbName -e "CREATE USER '$applicationUsername'@'172.17.0.%' IDENTIFIED BY '$applicationUserPwd';"
-mysql -u root -proot $dbName -e "GRANT SELECT, UPDATE, INSERT, DELETE, CREATE, DROP, ALTER, REFERENCES ON $dbName.* TO '$applicationUsername'@'172.17.0.%';"
+mysql -u root -proot -e "CREATE USER '$applicationUsername'@'172.17.0.%' IDENTIFIED BY '$applicationUserPwd';"
+mysql -u root -proot -e "GRANT SELECT, UPDATE, INSERT, DELETE, CREATE, DROP, ALTER, REFERENCES ON $dbName.* TO '$applicationUsername'@'172.17.0.%';"
 #echo "db.createUser({user: \"$applicationUsername\", pwd: \"$applicationUserPwd\", roles: [{role: \"readWrite\", db: \"$dbName\"}]})" | mongosh -u sadmin -p sadmin admin || echo "L'utilisateur de cette base de données existe déjà"
 echo ""
 echo ""

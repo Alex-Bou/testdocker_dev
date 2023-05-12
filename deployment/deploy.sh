@@ -1,3 +1,7 @@
+# This is the encryption salt
+# IT MUST BE UNIQUE BY APPLICATION AND NEVER CHANGED DURING THE LIFETIME OF THE DATABASE
+jwtSecret=8twBbf0B_Kj75ow3jY7o3Qm
+
 # Load actual server config variables
 . configFiles/deployConfig.cfg || ERROR_CONF_SPE=true
 if [ "$ERROR_CONF_SPE" = true ]; then
@@ -11,6 +15,7 @@ if [ "$installed" = true ]; then
   # Drop old DB application User
   echo ""
   echo "Suppression de l'utilisateur de l'application des utilisateurs de la base de données"
+  mysql -u root -proot $dbName -e "DROP USER '$applicationUsername'@'172.17.0.%';";
 #  echo "db.dropUser(\"$applicationUsername\")" | mongosh -u sadmin -p sadmin admin TODO: MySQL
 
   # Try to find a Docker image by name (server config)
@@ -65,19 +70,39 @@ sed -i "s/^serverPort=.*$/serverPort=$appPort/" "$gitRepo"/deployment/deployConf
 #sed -i "s/^appVersion=.*$/appVersion=$version/" "$gitRepo"/deployment/deployConfig.cfg
 
 ### Replace config variables in files ### TODO: Continue
-# .env -> DATABASE_URL
+# .env
+sed -i "s/^.*APP_ENV=.*$/APP_ENV=prod/" "$gitRepo"/.env
+sed -i "s/^.*APP_DEBUG=.*$/APP_DEBUG=false/" "$gitRepo"/.env
+sed -i "s/^.*SECURE_SCHEME=.*$/SECURE_SCHEME=http/" "$gitRepo"/.env
+sed -i "s/^.*APP_SECRET=.*$/APP_SECRET=$jwtSecret/" "$gitRepo"/.env
 sed -i "s/^.*DATABASE_URL=.*$/DATABASE_URL=\"mysql://$username:$password@$db_ip:$db_port/$db_name\"/" "$gitRepo"/.env
+sed -i "s/^.*BASE_URL=.*$/BASE_URL=http://$serverIp:$serverPort/$applicationDir/" "$gitRepo"/.env
+sed -i "s/^.*URL_ROOT=.*$/URL_ROOT=$applicationDir/" "$gitRepo"/.env
+# docker-compose.yaml
+sed -i "s/^.*image:.*$/    image: $dockerImageName/" "$gitRepo"/docker-compose.yaml
+sed -i "s/^.*container_name:.*$/    container_name: $dockerImageName/" "$gitRepo"/docker-compose.yaml
+sed -i "s/^.*- \".*:80\".*$/      - \"$serverPort:80\"/" "$gitRepo"/docker-compose.yaml
+sed -i "s/^.*- .\/:.*$/      - .\/:\/var\/www\/$dockerImageName/" "$gitRepo"/docker-compose.yaml
+# Dockerfile
+sed -i "s/^.*RUN mkdir.*$/RUN mkdir \/var\/www\/$dockerImageName/" "$gitRepo"/Dockerfile
+sed -i "s/^.*WORKDIR.*$/WORKDIR \/var\/www\/$dockerImageName\//" "$gitRepo"/Dockerfile
+# vhosts.conf
+sed -i "s/^.*DocumentRoot.*$/    DocumentRoot \/var\/www\/$dockerImageName\/public/" "$gitRepo"/php/vhosts/vhosts.conf
+sed -i "s/^.*<Directory.*public.*$/    <Directory \/var\/www\/$dockerImageName\/public >/" "$gitRepo"/php/vhosts/vhosts.conf
+sed -i "s/^.*<Directory.*bundles.*$/    <Directory \/var\/www\/$dockerImageName\/bundles >/" "$gitRepo"/php/vhosts/vhosts.conf
 
 
 ##### COMMAND NEEDED TO SETUP THE PROJECT #####
-# npm install
-# npm run watch # TODO: Run async
-# composer install
+ npm install
+ npm run watch & # TODO: Run async
+ composer install
 
 ##### MYSQL DEDICATED DB USER CREATION #####
 # Create the dedicated user for this MySQL Database # TODO: MySQL
 echo ""
 echo "Ajout de l'utilisateur de l'application dans les utilisateurs de la base de données"
+mysql -u root -proot $dbName -e "CREATE USER '$applicationUsername'@'172.17.0.%' IDENTIFIED BY '$applicationUserPwd';"
+mysql -u root -proot $dbName -e "GRANT SELECT, UPDATE, INSERT, DELETE, CREATE, DROP, ALTER, REFERENCES ON $dbName.* TO '$applicationUsername'@'172.17.0.%';"
 #echo "db.createUser({user: \"$applicationUsername\", pwd: \"$applicationUserPwd\", roles: [{role: \"readWrite\", db: \"$dbName\"}]})" | mongosh -u sadmin -p sadmin admin || echo "L'utilisateur de cette base de données existe déjà"
 echo ""
 echo ""

@@ -91,17 +91,23 @@ sed -i "s/^.*DocumentRoot.*$/    DocumentRoot \/var\/www\/$dockerImageName\/publ
 sed -i "s/^.*<Directory.*public.*$/    <Directory \/var\/www\/$dockerImageName\/public >/" "$gitRepo"/php/vhosts/vhosts.conf
 sed -i "s/^.*<Directory.*bundles.*$/    <Directory \/var\/www\/$dockerImageName\/bundles >/" "$gitRepo"/php/vhosts/vhosts.conf
 
+read
 
 ##### COMMAND NEEDED TO SETUP THE PROJECT #####
 cd $gitRepo
 npm install
 echo ""
-echo "Si le programme vous demande si vous voulez run Composer en tant que root/super user, faites 'Entrer'"
+echo "NEXT"
+echo ""
 composer install
+echo ""
+echo "NEXT"
+echo ""
 npm run build
+echo ""
+echo "TERMINE"
+echo ""
 cd ..
-
-echo "Next"
 
 ##### MYSQL DEDICATED DB USER CREATION #####
 # Create the dedicated user for this MySQL Database # TODO: MySQL

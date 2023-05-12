@@ -99,7 +99,7 @@ mysql -u root -proot -e "CREATE USER '$applicationUsername'@'%' IDENTIFIED BY '$
 if [ "$ERR_DB_CREATE" != true ]; then
   echo ""
   echo "### Impossible de créer l'utilisateur de base de données ###"
-  exit 1
+#  exit 1
 fi
 echo ""
 echo "Configuration de ses privilèges"
@@ -107,7 +107,7 @@ mysql -u root -proot -e "GRANT SELECT, UPDATE, INSERT, DELETE, CREATE, DROP, ALT
 if [ "$ERR_DB_GRANT" != true ]; then
   echo ""
   echo "### Impossible de donner à l'utilisateur de base de données ses privilèges ###"
-  exit 1
+#  exit 1
 fi
 echo ""
 echo "Utilisateur de base de données ajouté et configuré !"

@@ -75,7 +75,7 @@ sed -i "s/^.*APP_ENV=.*$/APP_ENV=prod/" "$gitRepo"/.env
 sed -i "s/^.*APP_DEBUG=.*$/APP_DEBUG=false/" "$gitRepo"/.env
 sed -i "s/^.*SECURE_SCHEME=.*$/SECURE_SCHEME=http/" "$gitRepo"/.env
 sed -i "s/^.*APP_SECRET=.*$/APP_SECRET=$jwtSecret/" "$gitRepo"/.env
-sed -i "s/^.*DATABASE_URL=.*$/DATABASE_URL=\"mysql:\/\/$applicationUsername:$applicationUserPwd@$dbIp:3306\/$db_name\"/" "$gitRepo"/.env
+sed -i "s/^.*DATABASE_URL=.*$/DATABASE_URL=\"mysql:\/\/$applicationUsername:$applicationUserPwd@$dbIp:3306\/$dbName\"/" "$gitRepo"/.env
 sed -i "s/^.*BASE_URL=.*$/BASE_URL=http:\/\/$serverIp:$serverPort\/$applicationDir\/" "$gitRepo"/.env
 sed -i "s/^.*URL_ROOT=.*$/URL_ROOT=$applicationDir/" "$gitRepo"/.env
 # docker-compose.yaml

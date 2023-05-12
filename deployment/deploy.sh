@@ -76,10 +76,10 @@ sed -i "s/^.*APP_DEBUG=.*$/APP_DEBUG=false/" "$gitRepo"/.env
 sed -i "s/^.*SECURE_SCHEME=.*$/SECURE_SCHEME=http/" "$gitRepo"/.env
 sed -i "s/^.*APP_SECRET=.*$/APP_SECRET=$jwtSecret/" "$gitRepo"/.env
 sed -i "s/^.*DATABASE_URL=.*$/DATABASE_URL=\"mysql:\/\/$applicationUsername:$applicationUserPwd@$dbIp:3306\/$dbName\"/" "$gitRepo"/.env
-echo "BASE URL $serverIp:$serverPort\/$applicationDir"
+echo "BASE URL $serverIp:$serverPort$applicationDir"
 sed -i "s+^.*BASE_URL=.*$+BASE_URL=http:\/\/$serverIp:$serverPort$applicationDir+" "$gitRepo"/.env
 echo "URL_ROOT=$applicationDir"
-sed -i "s/^.*URL_ROOT=.*$/URL_ROOT=$applicationDir/" "$gitRepo"/.env
+sed -i "s+^.*URL_ROOT=.*$+URL_ROOT=$applicationDir+" "$gitRepo"/.env
 ## docker-compose.yaml
 sed -i "s/^.*image:.*$/    image: $dockerImageName/" "$gitRepo"/docker-compose.yaml
 sed -i "s/^.*container_name:.*$/    container_name: $dockerImageName/" "$gitRepo"/docker-compose.yaml
@@ -94,7 +94,7 @@ sed -i "s/^.*<Directory.*public>$/    <Directory \/var\/www\/$dockerImageName\/p
 sed -i "s/^.*<Directory.*bundles>$/    <Directory \/var\/www\/$dockerImageName\/bundles>/" "$gitRepo"/php/vhosts/vhosts.conf
 # config/routes.yaml
 echo "  prefix: $applicationDir"
-sed -i "s/^.*prefix\:.*$/  prefix: $applicationDir/" "$gitRepo"/config/routes.yaml
+sed -i "s+^.*prefix\:.*$+  prefix: $applicationDir+" "$gitRepo"/config/routes.yaml
 
 ##### MYSQL DEDICATED DB USER CREATION #####
 # Create the dedicated user for this MySQL Database #

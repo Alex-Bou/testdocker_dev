@@ -90,6 +90,8 @@ sed -i "s/^.*WORKDIR.*$/WORKDIR \/var\/www\/$dockerImageName\//" "$gitRepo"/Dock
 sed -i "s/^.*DocumentRoot.*$/    DocumentRoot \/var\/www\/$dockerImageName\/public/" "$gitRepo"/php/vhosts/vhosts.conf
 sed -i "s/^.*<Directory.*public>$/    <Directory \/var\/www\/$dockerImageName\/public>/" "$gitRepo"/php/vhosts/vhosts.conf
 sed -i "s/^.*<Directory.*bundles>$/    <Directory \/var\/www\/$dockerImageName\/bundles>/" "$gitRepo"/php/vhosts/vhosts.conf
+# config/routes.yaml
+sed -i "s/^.*prefix:.*$/  prefix: $applicationDir/" "$gitRepo"/config/routes.yaml
 
 ##### MYSQL DEDICATED DB USER CREATION #####
 # Create the dedicated user for this MySQL Database #

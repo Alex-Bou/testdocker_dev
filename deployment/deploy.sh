@@ -91,7 +91,6 @@ sed -i "s/^.*DocumentRoot.*$/    DocumentRoot \/var\/www\/$dockerImageName\/publ
 sed -i "s/^.*<Directory.*public>$/    <Directory \/var\/www\/$dockerImageName\/public>/" "$gitRepo"/php/vhosts/vhosts.conf
 sed -i "s/^.*<Directory.*bundles>$/    <Directory \/var\/www\/$dockerImageName\/bundles>/" "$gitRepo"/php/vhosts/vhosts.conf
 
-read
 ##### MYSQL DEDICATED DB USER CREATION #####
 # Create the dedicated user for this MySQL Database #
 echo ""

@@ -91,32 +91,36 @@ sed -i "s/^.*DocumentRoot.*$/    DocumentRoot \/var\/www\/$dockerImageName\/publ
 sed -i "s/^.*<Directory.*public>$/    <Directory \/var\/www\/$dockerImageName\/public>/" "$gitRepo"/php/vhosts/vhosts.conf
 sed -i "s/^.*<Directory.*bundles>$/    <Directory \/var\/www\/$dockerImageName\/bundles>/" "$gitRepo"/php/vhosts/vhosts.conf
 
-read
-
-##### COMMAND NEEDED TO SETUP THE PROJECT #####
-cd $gitRepo
-npm install
-echo ""
-echo "NEXT"
-echo ""
-composer install
-echo ""
-echo "NEXT"
-echo ""
-npm run build
-echo ""
-echo "TERMINE"
-echo ""
-cd ..
-
 ##### MYSQL DEDICATED DB USER CREATION #####
 # Create the dedicated user for this MySQL Database # TODO: MySQL
 echo ""
 echo "Ajout de l'utilisateur de l'application dans les utilisateurs de la base de données"
-mysql -u root -proot -e "CREATE USER '$applicationUsername'@'%' IDENTIFIED BY '$applicationUserPwd';"
+mysql -u root -proot -e "CREATE USER '$applicationUsername'@'%' IDENTIFIED BY '$applicationUserPwd';" || ERR_DB_CREATE=true
+if [ "$ERR_DB_CREATE" != true ]; then
+  echo ""
+  echo "### Impossible de créer l'utilisateur de base de données ###"
+  exit 1
+fi
 echo ""
 echo "Configuration de ses privilèges"
-mysql -u root -proot -e "GRANT SELECT, UPDATE, INSERT, DELETE, CREATE, DROP, ALTER, REFERENCES ON $dbName.* TO '$applicationUsername'@'%';"
-#echo "db.createUser({user: \"$applicationUsername\", pwd: \"$applicationUserPwd\", roles: [{role: \"readWrite\", db: \"$dbName\"}]})" | mongosh -u sadmin -p sadmin admin || echo "L'utilisateur de cette base de données existe déjà"
+mysql -u root -proot -e "GRANT SELECT, UPDATE, INSERT, DELETE, CREATE, DROP, ALTER, REFERENCES ON $dbName.* TO '$applicationUsername'@'%';" || ERR_DB_GRANT=true
+if [ "$ERR_DB_GRANT" != true ]; then
+  echo ""
+  echo "### Impossible de donner à l'utilisateur de base de données ses privilèges ###"
+  exit 1
+fi
 echo ""
 echo "Utilisateur de base de données ajouté et configuré !"
+
+##### COMMAND NEEDED TO SETUP THE PROJECT #####
+cd $gitRepo
+echo ""
+echo "Installation des dépendances NPM..."
+npm install
+echo ""
+echo "Installation des dépendances Composer..."
+composer install
+echo ""
+echo "Exécution du webpack et création du point d'entrée de l'application..."
+npm run build
+cd ..

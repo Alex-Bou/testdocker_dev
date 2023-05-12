@@ -96,19 +96,19 @@ sed -i "s/^.*<Directory.*bundles>$/    <Directory \/var\/www\/$dockerImageName\/
 echo ""
 echo "Ajout de l'utilisateur de l'application dans les utilisateurs de la base de données"
 mysql -u root -proot -e "CREATE USER '$applicationUsername'@'%' IDENTIFIED BY '$applicationUserPwd';" || ERR_DB_CREATE=true
-if [ "$ERR_DB_CREATE" != true ]; then
-  echo ""
-  echo "### Impossible de créer l'utilisateur de base de données ###"
+#if [ "$ERR_DB_CREATE" != true ]; then
+#  echo ""
+#  echo "### Impossible de créer l'utilisateur de base de données ###"
 #  exit 1
 fi
 echo ""
 echo "Configuration de ses privilèges"
 mysql -u root -proot -e "GRANT SELECT, UPDATE, INSERT, DELETE, CREATE, DROP, ALTER, REFERENCES ON $dbName.* TO '$applicationUsername'@'%';" || ERR_DB_GRANT=true
-if [ "$ERR_DB_GRANT" != true ]; then
-  echo ""
-  echo "### Impossible de donner à l'utilisateur de base de données ses privilèges ###"
+#if [ "$ERR_DB_GRANT" != true ]; then
+#  echo ""
+#  echo "### Impossible de donner à l'utilisateur de base de données ses privilèges ###"
 #  exit 1
-fi
+#fi
 echo ""
 echo "Utilisateur de base de données ajouté et configuré !"
 

@@ -95,8 +95,10 @@ sed -i "s/^.*<Directory.*bundles.*$/    <Directory \/var\/www\/$dockerImageName\
 ##### COMMAND NEEDED TO SETUP THE PROJECT #####
 cd $gitRepo
 npm install
-npm run build &
-composer install -n
+echo ""
+echo "Si le programme vous demande si vous voulez run Composer en tant que root/super user, faites 'Entrer'"
+composer install
+npm run build
 cd ..
 
 echo "Next"

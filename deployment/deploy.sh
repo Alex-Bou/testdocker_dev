@@ -94,10 +94,12 @@ sed -i "s/^.*<Directory.*bundles.*$/    <Directory \/var\/www\/$dockerImageName\
 
 ##### COMMAND NEEDED TO SETUP THE PROJECT #####
 cd $gitRepo
-npm install -y
-npm run watch & # TODO: Run async
-composer install
+npm install
+composer install -y
+exec npm run watch -d # TODO: Run async
 cd ..
+
+echo "Next"
 
 ##### MYSQL DEDICATED DB USER CREATION #####
 # Create the dedicated user for this MySQL Database # TODO: MySQL

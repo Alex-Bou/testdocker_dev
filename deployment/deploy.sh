@@ -100,7 +100,7 @@ mysql -u root -proot -e "CREATE USER '$applicationUsername'@'%' IDENTIFIED BY '$
 #  echo ""
 #  echo "### Impossible de créer l'utilisateur de base de données ###"
 #  exit 1
-fi
+#fi
 echo ""
 echo "Configuration de ses privilèges"
 mysql -u root -proot -e "GRANT SELECT, UPDATE, INSERT, DELETE, CREATE, DROP, ALTER, REFERENCES ON $dbName.* TO '$applicationUsername'@'%';" || ERR_DB_GRANT=true

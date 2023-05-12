@@ -50,9 +50,9 @@ fi
 # Specify the port used by the container (80 for Angular)
 echo "" >>configFiles/deployConfig.cfg
 echo "### For start.sh script ###" >>"$gitRepo"/deployment/deployConfig.cfg
-echo "containerPort=8000" >>"$gitRepo"/deployment/deployConfig.cfg
+echo "containerPort=80" >>"$gitRepo"/deployment/deployConfig.cfg
 echo ""
-echo "Symfony container port is defined to 8000"
+echo "Symfony container port is defined to 80"
 
 echo ""
 echo ""
@@ -69,7 +69,7 @@ sed -i "s/^serverPort=.*$/serverPort=$appPort/" "$gitRepo"/deployment/deployConf
 ## Update the given version if it has changed
 #sed -i "s/^appVersion=.*$/appVersion=$version/" "$gitRepo"/deployment/deployConfig.cfg
 
-### Replace config variables in files ### TODO: Continue
+### Replace config variables in files ###
 # .env
 sed -i "s/^.*APP_ENV=.*$/APP_ENV=prod/" "$gitRepo"/.env
 sed -i "s/^.*APP_DEBUG=.*$/APP_DEBUG=false/" "$gitRepo"/.env
@@ -81,7 +81,7 @@ sed -i "s/^.*URL_ROOT=.*$/URL_ROOT=$applicationDir/" "$gitRepo"/.env
 # docker-compose.yaml
 sed -i "s/^.*image:.*$/    image: $dockerImageName/" "$gitRepo"/docker-compose.yaml
 sed -i "s/^.*container_name:.*$/    container_name: $dockerImageName/" "$gitRepo"/docker-compose.yaml
-sed -i "s/^.*- \".*:80\".*$/      - \"$serverPort:80\"/" "$gitRepo"/docker-compose.yaml
+sed -i "s/^.*- \".*:80\".*$/      - \"$serverPort:$containerPort\"/" "$gitRepo"/docker-compose.yaml
 sed -i "s/^.*- .\/:.*$/      - .\/:\/var\/www\/$dockerImageName/" "$gitRepo"/docker-compose.yaml
 # Dockerfile
 sed -i "s/^.*RUN mkdir.*$/RUN mkdir \/var\/www\/$dockerImageName/" "$gitRepo"/Dockerfile
@@ -92,7 +92,7 @@ sed -i "s/^.*<Directory.*public>$/    <Directory \/var\/www\/$dockerImageName\/p
 sed -i "s/^.*<Directory.*bundles>$/    <Directory \/var\/www\/$dockerImageName\/bundles>/" "$gitRepo"/php/vhosts/vhosts.conf
 
 ##### MYSQL DEDICATED DB USER CREATION #####
-# Create the dedicated user for this MySQL Database # TODO: MySQL
+# Create the dedicated user for this MySQL Database #
 echo ""
 echo "Ajout de l'utilisateur de l'application dans les utilisateurs de la base de données"
 mysql -u root -proot -e "CREATE USER '$applicationUsername'@'172.17.0.%' IDENTIFIED BY '$applicationUserPwd';" || ERR_DB_CREATE=true

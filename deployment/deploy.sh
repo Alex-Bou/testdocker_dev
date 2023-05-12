@@ -71,12 +71,19 @@ sed -i "s/^serverPort=.*$/serverPort=$appPort/" "$gitRepo"/deployment/deployConf
 
 ### Replace config variables in files ###
 # .env
-#sed -i "s/^.*APP_ENV=.*$/APP_ENV=prod/" "$gitRepo"/.env
-#sed -i "s/^.*APP_DEBUG=.*$/APP_DEBUG=false/" "$gitRepo"/.env
-#sed -i "s/^.*SECURE_SCHEME=.*$/SECURE_SCHEME=http/" "$gitRepo"/.env
+echo "APP ENV"
+sed -i "s/^.*APP_ENV=.*$/APP_ENV=prod/" "$gitRepo"/.env
+echo "APP DEBUG"
+sed -i "s/^.*APP_DEBUG=.*$/APP_DEBUG=false/" "$gitRepo"/.env
+echo "SECURE SCHEME"
+sed -i "s/^.*SECURE_SCHEME=.*$/SECURE_SCHEME=http/" "$gitRepo"/.env
+echo "APP SECRET"
 sed -i "s/^.*APP_SECRET=.*$/APP_SECRET=$jwtSecret/" "$gitRepo"/.env
+echo "DATABASE URL"
 sed -i "s/^.*DATABASE_URL=.*$/DATABASE_URL=\"mysql:\/\/$applicationUsername:$applicationUserPwd@$dbIp:3306\/$dbName\"/" "$gitRepo"/.env
+echo "BASE URL"
 sed -i "s/^.*BASE_URL=.*$/BASE_URL=http:\/\/$serverIp:$serverPort\/$applicationDir\/" "$gitRepo"/.env
+echo "URL ROOT"
 sed -i "s/^.*URL_ROOT=.*$/URL_ROOT=$applicationDir/" "$gitRepo"/.env
 ## docker-compose.yaml
 sed -i "s/^.*image:.*$/    image: $dockerImageName/" "$gitRepo"/docker-compose.yaml

@@ -87,9 +87,9 @@ sed -i "s/^serverPort=.*$/serverPort=$appPort/" "$gitRepo"/deployment/deployConf
 sed -i "s+^RUN mkdir.*$+RUN mkdir \/var\/www\/$dockerImageName+" "$gitRepo"/Dockerfile
 sed -i "s+^WORKDIR.*$+WORKDIR \/var\/www\/$dockerImageName\/+" "$gitRepo"/Dockerfile
 ### vhosts.conf
-#sed -i "s+^.*DocumentRoot.*$+    DocumentRoot \/var\/www\/$dockerImageName\/public+" "$gitRepo"/php/vhosts/vhosts.conf
-#sed -i "s+^.*<Directory.*public>$+    <Directory \/var\/www\/$dockerImageName\/public>+" "$gitRepo"/php/vhosts/vhosts.conf
-#sed -i "s+^.*<Directory.*bundles>$+    <Directory \/var\/www\/$dockerImageName\/bundles>+" "$gitRepo"/php/vhosts/vhosts.conf
+sed -i "s+^.*DocumentRoot.*$+    DocumentRoot \/var\/www\/$dockerImageName\/public+" "$gitRepo"/php/vhosts/vhosts.conf
+sed -i "s+^.*<Directory.*public>$+    <Directory \/var\/www\/$dockerImageName\/public>+" "$gitRepo"/php/vhosts/vhosts.conf
+sed -i "s+^.*<Directory.*bundles>$+    <Directory \/var\/www\/$dockerImageName\/bundles>+" "$gitRepo"/php/vhosts/vhosts.conf
 ## config/routes.yaml
 #sed -i "s+^.*prefix\:.*$+  prefix: $applicationDir+" "$gitRepo"/config/routes.yaml
 

@@ -84,8 +84,8 @@ sed -i "s/^serverPort=.*$/serverPort=$appPort/" "$gitRepo"/deployment/deployConf
 #sed -i "s+^.*- \".*:80\".*$+      - \"$serverPort:$containerPort\"+" "$gitRepo"/docker-compose.yaml
 #sed -i "s+^.*- .\/:.*$+      - .\/:\/var\/www\/$dockerImageName+" "$gitRepo"/docker-compose.yaml
 ### Dockerfile
-#sed -i "s+^RUN mkdir.*$+RUN mkdir \/var\/www\/$dockerImageName+" "$gitRepo"/Dockerfile
-#sed -i "s+^WORKDIR.*$+WORKDIR \/var\/www\/$dockerImageName\/+" "$gitRepo"/Dockerfile
+sed -i "s+^RUN mkdir.*$+RUN mkdir \/var\/www\/$dockerImageName+" "$gitRepo"/Dockerfile
+sed -i "s+^WORKDIR.*$+WORKDIR \/var\/www\/$dockerImageName\/+" "$gitRepo"/Dockerfile
 ### vhosts.conf
 #sed -i "s+^.*DocumentRoot.*$+    DocumentRoot \/var\/www\/$dockerImageName\/public+" "$gitRepo"/php/vhosts/vhosts.conf
 #sed -i "s+^.*<Directory.*public>$+    <Directory \/var\/www\/$dockerImageName\/public>+" "$gitRepo"/php/vhosts/vhosts.conf

@@ -31,7 +31,7 @@ if [ "$installed" = true ]; then
 fi
 
 # Load new config variables
-. "$gitRepo"/deployment/deployConfig.cfg # Override the previous deployConfig.cfg imported
+. "$folderName"/deployment/deployConfig.cfg # Override the previous deployConfig.cfg imported
 
 # Try to find a Docker image by the name configured in deployConfig.cfg of application
 echo ""
@@ -49,8 +49,8 @@ fi
 
 # Specify the port used by the container (80 for Angular)
 echo "" >>configFiles/deployConfig.cfg
-echo "### For start.sh script ###" >>"$gitRepo"/deployment/deployConfig.cfg
-echo "containerPort=80" >>"$gitRepo"/deployment/deployConfig.cfg
+echo "### For start.sh script ###" >>"$folderName"/deployment/deployConfig.cfg
+echo "containerPort=80" >>"$folderName"/deployment/deployConfig.cfg
 echo ""
 echo "Symfony container port is defined to 80"
 
@@ -59,39 +59,39 @@ echo ""
 # Ask user confirmation for server port
 read -p "Confirmer le port pour l'application: " -i "$serverPort" -e appPort
 # Update the given port if it has changed
-sed -i "s/^serverPort=.*$/serverPort=$appPort/" "$gitRepo"/deployment/deployConfig.cfg
+sed -i "s/^serverPort=.*$/serverPort=$appPort/" "$folderName"/deployment/deployConfig.cfg
 
 # Load new config variables
-. "$gitRepo"/deployment/deployConfig.cfg # Override the previous deployConfig.cfg imported
+. "$folderName"/deployment/deployConfig.cfg # Override the previous deployConfig.cfg imported
 
 ## Ask user confirmation for version number TODO: Research versioning
 #read -r -p "Confirmer la version de l'application: " -i "$appVersion" -e version
 ## Update the given version if it has changed
-#sed -i "s/^appVersion=.*$/appVersion=$version/" "$gitRepo"/deployment/deployConfig.cfg
+#sed -i "s/^appVersion=.*$/appVersion=$version/" "$folderName"/deployment/deployConfig.cfg
 
 ### Replace config variables in files ###
 # .env
-sed -i "s+^APP_ENV=.*$+APP_ENV=prod+" "$gitRepo"/.env
-sed -i "s+^APP_DEBUG=.*$+APP_DEBUG=true+" "$gitRepo"/.env
-sed -i "s+^SECURE_SCHEME=.*$+SECURE_SCHEME=http+" "$gitRepo"/.env
-sed -i "s+^APP_SECRET=.*$+APP_SECRET=$jwtSecret+" "$gitRepo"/.env
-sed -i "s+^DATABASE_URL=.*$+DATABASE_URL=\"mysql:\/\/$applicationUsername:$applicationUserPwd@$dbIp:3306\/$dbName\"+" "$gitRepo"/.env
-sed -i "s+^BASE_URL=.*$+BASE_URL=http:\/\/$serverIp:$serverPort$applicationDir+" "$gitRepo"/.env
-sed -i "s+^URL_ROOT=.*$+URL_ROOT=$applicationDir+" "$gitRepo"/.env
+sed -i "s+^APP_ENV=.*$+APP_ENV=prod+" "$folderName"/.env
+sed -i "s+^APP_DEBUG=.*$+APP_DEBUG=true+" "$folderName"/.env
+sed -i "s+^SECURE_SCHEME=.*$+SECURE_SCHEME=http+" "$folderName"/.env
+sed -i "s+^APP_SECRET=.*$+APP_SECRET=$jwtSecret+" "$folderName"/.env
+sed -i "s+^DATABASE_URL=.*$+DATABASE_URL=\"mysql:\/\/$applicationUsername:$applicationUserPwd@$dbIp:3306\/$dbName\"+" "$folderName"/.env
+sed -i "s+^BASE_URL=.*$+BASE_URL=http:\/\/$serverIp:$serverPort$applicationDir+" "$folderName"/.env
+sed -i "s+^URL_ROOT=.*$+URL_ROOT=$applicationDir+" "$folderName"/.env
 ### docker-compose.yaml
-sed -i "s+^.*image:.*$+    image: $dockerImageName+" "$gitRepo"/docker-compose.yaml
-sed -i "s+^.*container_name:.*$+    container_name: $dockerImageName+" "$gitRepo"/docker-compose.yaml
-sed -i "s+^.*- \".*:80\".*$+      - \"$serverPort:$containerPort\"+" "$gitRepo"/docker-compose.yaml
-sed -i "s+^.*- .\/:.*$+      - .\/:\/var\/www\/$dockerImageName+" "$gitRepo"/docker-compose.yaml
+sed -i "s+^.*image:.*$+    image: $dockerImageName+" "$folderName"/docker-compose.yaml
+sed -i "s+^.*container_name:.*$+    container_name: $dockerImageName+" "$folderName"/docker-compose.yaml
+sed -i "s+^.*- \".*:80\".*$+      - \"$serverPort:$containerPort\"+" "$folderName"/docker-compose.yaml
+sed -i "s+^.*- .\/:.*$+      - .\/:\/var\/www\/$dockerImageName+" "$folderName"/docker-compose.yaml
 ### Dockerfile
-sed -i "s+^RUN mkdir.*$+RUN mkdir \/var\/www\/$dockerImageName+" "$gitRepo"/Dockerfile
-sed -i "s+^WORKDIR.*$+WORKDIR \/var\/www\/$dockerImageName\/+" "$gitRepo"/Dockerfile
+sed -i "s+^RUN mkdir.*$+RUN mkdir \/var\/www\/$dockerImageName+" "$folderName"/Dockerfile
+sed -i "s+^WORKDIR.*$+WORKDIR \/var\/www\/$dockerImageName\/+" "$folderName"/Dockerfile
 ### vhosts.conf
-sed -i "s+^.*DocumentRoot.*$+    DocumentRoot \/var\/www\/$dockerImageName\/public+" "$gitRepo"/php/vhosts/vhosts.conf
-sed -i "s+^.*<Directory.*public>$+    <Directory \/var\/www\/$dockerImageName\/public>+" "$gitRepo"/php/vhosts/vhosts.conf
-sed -i "s+^.*<Directory.*bundles>$+    <Directory \/var\/www\/$dockerImageName\/bundles>+" "$gitRepo"/php/vhosts/vhosts.conf
+sed -i "s+^.*DocumentRoot.*$+    DocumentRoot \/var\/www\/$dockerImageName\/public+" "$folderName"/php/vhosts/vhosts.conf
+sed -i "s+^.*<Directory.*public>$+    <Directory \/var\/www\/$dockerImageName\/public>+" "$folderName"/php/vhosts/vhosts.conf
+sed -i "s+^.*<Directory.*bundles>$+    <Directory \/var\/www\/$dockerImageName\/bundles>+" "$folderName"/php/vhosts/vhosts.conf
 ## config/routes.yaml
-sed -i "s+^.*prefix\:.*$+  prefix: $applicationDir+" "$gitRepo"/config/routes.yaml
+sed -i "s+^.*prefix\:.*$+  prefix: $applicationDir+" "$folderName"/config/routes.yaml
 
 ##### MYSQL DEDICATED DB USER CREATION #####
 # Create the dedicated user for this MySQL Database #
@@ -117,7 +117,7 @@ echo ""
 echo "Utilisateur de base de données ajouté et configuré !"
 
 ##### COMMAND NEEDED TO SETUP THE PROJECT #####
-cd $gitRepo
+cd $folderName
 echo ""
 echo "Installation des dépendances NPM..."
 npm install

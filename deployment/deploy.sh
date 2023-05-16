@@ -124,7 +124,7 @@ npm install
 echo ""
 echo "Installation des dépendances Composer..."
 composer install
-echo "##### L'erreur ci-dessus est NORMALE -> dû au fait que c'est un script qui exécute la commande et non quelqu'un #####"
+echo "##### L'erreur ci-dessus est NORMALE (simple clear cache) -> dû au fait que c'est un script qui exécute la commande et non quelqu'un #####"
 echo ""
 echo "Exécution du webpack et création du point d'entrée de l'application..."
 npm run build
